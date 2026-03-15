@@ -57,7 +57,7 @@ A large collection of multi-source dermatoscopic images of common pigmented skin
 | Total Images | 10,015 |
 | Image Size | 450 × 600 px (resized to 224 × 224) |
 | Classes | 7 |
-| Source | [Kaggle — HAM10000](https://www.kaggle.com/datasets/kmader/skin-lesion-analysis-toward-melanoma-detection) |
+| Source | [Kaggle — HAM10000](https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000) |
 
 > Download from Kaggle and place in the following structure:
 > ```
