@@ -1,13 +1,4 @@
-"""
-HAM10000 Skin Lesion Classifier — FastAPI Application
-======================================================
-Endpoints:
-  GET  /              → welcome message
-  GET  /health        → health check (model loaded, device, uptime)
-  GET  /classes       → list all 7 classes with descriptions
-  POST /predict       → single image prediction
-  POST /predict/batch → multiple images (up to 10)
-"""
+
 
 import io
 import time
@@ -29,7 +20,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
 
-# ── Logging ────────────────────────────────────────────────────────────────────
+# ── Logging 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  [%(levelname)s]  %(message)s",
@@ -37,7 +28,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ── Constants ──────────────────────────────────────────────────────────────────
+# ── Constants 
 MODEL_PATH  = Path("models/efficientnet_inference.pth")
 IMG_SIZE    = 224
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
@@ -139,10 +130,6 @@ async def lifespan(app: FastAPI):
         ),
     ])
 
-    # Normalize idx_to_class keys to strings regardless of how they were saved.
-    # PyTorch .pth saves Python dict keys as-is (integers: {0: 'nv', 1: 'mel', ...})
-    # but JSON round-trips always produce string keys ("0", "1", ...).
-    # Forcing strings here makes run_inference safe in both cases.
     raw_idx_to_class = checkpoint["idx_to_class"]
     idx_to_class_normalized = {str(k): v for k, v in raw_idx_to_class.items()}
 
@@ -158,13 +145,13 @@ async def lifespan(app: FastAPI):
     logger.info(f"   Test Macro F1 : {checkpoint.get('test_macro_f1',  'N/A')}")
     logger.info(f"   Test ROC-AUC  : {checkpoint.get('test_roc_auc',   'N/A')}")
 
-    yield  # ← app runs here
+    yield  
 
     logger.info(" Shutting down API...")
     app_state.clear()
 
 
-# ── FastAPI app ────────────────────────────────────────────────────────────────
+# ── FastAPI app 
 app = FastAPI(
     title       = "HAM10000 Skin Lesion Classifier",
     description = (
@@ -184,7 +171,7 @@ app.add_middleware(
 )
 
 
-# ── Pydantic response models ───────────────────────────────────────────────────
+# ── Pydantic response models 
 class ClassProbability(BaseModel):
     class_key   : str
     full_name   : str
@@ -218,7 +205,7 @@ class HealthResponse(BaseModel):
     uptime_sec   : float
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# ── Helpers
 def validate_image_file(file: UploadFile) -> None:
     """Raise HTTPException if file is not a valid image."""
     if file.content_type not in ALLOWED_TYPES:
@@ -319,7 +306,7 @@ def build_prediction_response(
     )
 
 
-# ── Routes ────────────────────────────────────────────────────────────────────
+# ── Routes 
 @app.get("/", tags=["General"])
 async def root():
     return {
